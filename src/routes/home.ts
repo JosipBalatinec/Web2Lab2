@@ -1,5 +1,5 @@
 import express, {Request, Response, Router} from 'express';
-import bcrypt from 'bcrypt';
+import bcryptjs from 'bcryptjs';
 
 const router: Router = express.Router();
 let xssEnabled = false;
@@ -34,7 +34,7 @@ router.post('/login', async(req: Request, res: Response) => {
     const {user, pass} = req.body;
 
     if (!sdeEnabled) {
-        const hashed = await bcrypt.hash(pass, 10);
+        const hashed = await bcryptjs.hash(pass, 10);
         username = user;
         password = hashed;
     } else {
