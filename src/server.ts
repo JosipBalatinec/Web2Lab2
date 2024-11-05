@@ -38,6 +38,3 @@ app.use('/home', homeRouter);
 app.get('/', (req, res) => {
       res.redirect('/home');  
   });
-
-app.listen(3000, () => {
-});
