@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <script defer src="/scripts/script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/style.css">
+    <title>Sigurnosni napadi</title>
+</head>
+<body>
+    <h1>Drugi projekt</h1>
+    
+    <hr class="line">
+
+    <h2>Cross-site scripting (XSS) - jednokratni</h2>
+
+    <p><b>Upute:</b><i> Jednostavan primjer jednokratnog xss napada. Ako je ranjivost uključena, unosom:</i>
+        <b>&lt;script&gt;alert("XSS napad")&lt;/script&gt;</b> <i>demonstrira se napad.</i>
+    </p>
+
+    <form action="/home/xssToggle" method="post">
+        <label>
+            <input type="checkbox" id="xss" name="xss" <%= xssEnabled ? 'checked' : '' %>>
+            Ranjivost uključena
+        </label>
+    </form>
+
+    <br>
+
+    <form action="/home" method="get">
+        <label for="message">Poruka:</label>
+        <input type="text" id="message" name="message" required>
+        <button type="submit">Slanje</button>
+    </form>
+
+    <h2>Poruka: </h2>
+    <div id="messageDisplay">
+        <% if (xssEnabled) { %>
+            <%- message %>
+        <% } else { %>
+            <% if (message) { %>
+                <p><%- JSON.stringify(message).replace(/</g, "&lt;").replace(/>/g, "&gt;") %></p>
+            <% } else { %>
+                <p></p>
+            <% } %>
+        <% } %>
+    </div>
+    
+    <br>
+    <hr class="line">
+
+    <h2>Nesigurna pohrana osjetljivih podataka (Sensitive Data Exposure)</h2>
+
+    <p><b>Upute:</b><i> Jednostavan primjer nesigurne pohrane osjetljivih podataka. Ako je ranjivost isključena, lozinka se hashira prije spremanja. Kad je ranjivost
+        uključena, lozinka se sprema kako je i unesena.
+        <br> Nema prave pohrane podataka, već samo kako bi to izgledalo.</i>
+    </p>
+
+    <form action="/home/sdeToggle" method="post">
+        <label>
+            <input type="checkbox" id="sde" name="sde" <%= sdeEnabled ? 'checked' : '' %>>
+            Ranjivost uključena
+        </label>
+    </form>
+
+    <br>
+
+    <form action="/home/login" method="post">
+        <label for="user">Korisničko ime:</label>
+        <input type="text" id="user" name="user" required>
+        
+        <label for="pass">Lozinka:</label>
+        <input type="password" id="pass" name="pass" required>
+        
+        <button type="submit">Slanje</button>
+    </form>
+
+    <h2>Pohranjeni podaci:</h2>
+
+    <p>Username: <%= username %></p>
+    <p>Password: <%= password %></p>
+   
+</body>
+</html>
