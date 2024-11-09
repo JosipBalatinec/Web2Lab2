@@ -52,27 +52,30 @@ router.post('/login', async(req: Request, res: Response) => {
 
     if (!sdeEnabled) {
         const hashed = await bcryptjs.hash(pass, 10);
-       
+        username = user;
+        password = pass;
+
         try {
             await pool.query(
-                'INSERT INTO korisnici (username, password) VALUES ($1, $2)',
+                'INSERT INTO tablica (username, password) VALUES ($1, $2)',
                 [user, hashed]
             );
         } catch (error) {
             console.error("Greška:", error);
         }
     } else {
+        username = user;
+        password = pass;
         try {
             await pool.query(
-                'INSERT INTO korisnici (username, password) VALUES ($1, $2)',
+                'INSERT INTO tablica (username, password) VALUES ($1, $2)',
                 [user, pass]
             );
         } catch (error) {
             console.error("Greška:", error);
         }
     }
-    username = user;
-    password = pass;
+    
 
     res.redirect("/home");
 });
