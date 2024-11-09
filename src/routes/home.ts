@@ -53,7 +53,7 @@ router.post('/login', async(req: Request, res: Response) => {
     if (!sdeEnabled) {
         const hashed = await bcryptjs.hash(pass, 10);
         username = user;
-        password = pass;
+        password = hashed;
 
         try {
             await pool.query(
@@ -75,7 +75,6 @@ router.post('/login', async(req: Request, res: Response) => {
             console.error("Greška:", error);
         }
     }
-    
 
     res.redirect("/home");
 });
